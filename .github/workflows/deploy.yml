@@ -25,7 +25,11 @@ jobs:
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
 
+      - name: Override aws_profile
+        run: |
+          sed -i 's/aws_profile.*=.*/aws_profile = ""/' terraform.tfvars
+
       - name: Deploy
         run: |
-          terraform init -var="aws_profile="
-          terraform apply -var="aws_profile=" -auto-approve
+          terraform init
+          terraform apply -auto-approve
