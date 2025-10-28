@@ -27,5 +27,6 @@ jobs:
 
       - name: Destroy
         run: |
+          export TF_VAR_aws_profile=""
           terraform init
-          terraform destroy -var="aws_profile=" -auto-approve
+          terraform destroy -auto-approve
