@@ -103,3 +103,6 @@ s3/plan.out
 .amazon*
 *.swp
 *.odt*
+!modules/*/lambda_function.zip
+!modules/rds-scheduler/lambda_function.zip
+!modules/bastion-scheduler/lambda_function.zip
