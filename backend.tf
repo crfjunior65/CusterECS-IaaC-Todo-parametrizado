@@ -4,7 +4,7 @@ terraform {
     key     = "terraform/ClusterECS/terraform.tfstate"
     region  = "us-east-1"
     encrypt = true
-    profile = "CloudFix"
+    #profile = "CloudFix"
     # Profile não pode usar variáveis no backend
     # Configure via: terraform init -backend-config="profile=CloudFix"
   }

@@ -1,5 +1,5 @@
 # Configurações AWS
-aws_profile = "" # "CloudFix" para local, vazio para GitHub Actions
+aws_profile = "CloudFix" #para local, vazio para GitHub Actions
 region      = "us-east-1"
 
 # ECS Configuration
