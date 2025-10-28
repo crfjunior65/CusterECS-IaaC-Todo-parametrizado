@@ -1,5 +1,5 @@
 # Configurações AWS
-aws_profile = "CloudFix" # Usado apenas localmente
+aws_profile = "" # "CloudFix" para local, vazio para GitHub Actions
 region      = "us-east-1"
 
 # ECS Configuration
@@ -60,7 +60,7 @@ valkey_num_nodes      = 1
 project_name = "plataforma-bet"
 prefix       = "cloudfix"
 environment  = "hml"
-#aws_profile  = "CloudFix" ### "default"
+# aws_profile duplicado removido
 
 # Bastion Configuration - Comentado para criar novo EIP
 # aws_eip_public_ip = "3.220.103.33"
