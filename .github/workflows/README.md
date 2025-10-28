@@ -1,100 +1,122 @@
-# GitHub Actions - Configuração de Secrets
+# 🔄 GitHub Actions Workflows
 
-Este documento descreve os secrets necessários para o pipeline CI/CD funcionar corretamente com AWS ECR e EKS.
+## 📋 Workflows Disponíveis
 
-## 🔐 Secrets Obrigatórios
+### 🚀 Deploy Infrastructure (`deploy-infra.yml`)
+**Propósito**: Deploy e atualização da infraestrutura CloudFix
 
-Configure os seguintes secrets no GitHub (Settings > Secrets and variables > Actions):
+**Triggers**:
+- **Manual**: Via workflow_dispatch com seleção de ambiente
+- **Automático**: Push para branch `main` (deploy em hml)
 
-### AWS Credentials
+**Funcionalidades**:
+- ✅ Validação de código Terraform
+- ✅ Security scan com tfsec
+- ✅ Plan antes do deploy
+- ✅ Deploy com aprovação manual
+- ✅ Outputs detalhados
+
+**Como usar**:
+1. Acesse Actions → Deploy Infrastructure
+2. Selecione o ambiente (dev/hml/prod)
+3. Digite "deploy" para confirmar
+4. Aguarde aprovação (se necessário)
+
+### 🗑️ Destroy Infrastructure (`destroy-infra.yml`)
+**Propósito**: Destruição segura da infraestrutura
+
+**Triggers**:
+- **Apenas Manual**: Via workflow_dispatch
+
+**Funcionalidades**:
+- ⚠️ Validação rigorosa de confirmação
+- ⚠️ Proteção contra destruição de produção
+- ✅ Plan destroy antes da execução
+- ✅ Aprovação manual obrigatória
+- ✅ Logs de auditoria completos
+
+**Como usar**:
+1. Acesse Actions → Destroy Infrastructure
+2. Selecione ambiente (dev/hml apenas)
+3. Digite "DESTROY" (case sensitive)
+4. Informe o motivo da destruição
+5. Aguarde aprovação obrigatória
+
+## 🔐 Configuração de Secrets
+
+Configure os seguintes secrets no repositório:
+
 ```
-AWS_ACCESS_KEY_ID
-AWS_SECRET_ACCESS_KEY
-```
-
-### Valores de Exemplo (substitua pelos seus valores reais):
-- **AWS_ACCESS_KEY_ID**: `AKIAIOSFODNN7EXAMPLE`
-- **AWS_SECRET_ACCESS_KEY**: `wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY`
-
-## 🏗️ Variáveis de Ambiente Configuradas no Workflow
-
-As seguintes variáveis estão definidas no arquivo `main.yml`:
-
-```yaml
-env:
-  AWS_REGION: us-east-1
-  ECR_REPOSITORY: backoffice/cloudfix-bko-api-back-stg
-  EKS_CLUSTER_NAME: cloudfix-cluster
-```
-
-### Para alterar esses valores:
-1. Edite o arquivo `.github/workflows/main.yml`
-2. Modifique a seção `env:` conforme necessário
-
-## 🚀 Como o Pipeline Funciona
-
-### 1. **Build e Push para ECR**
-- Faz checkout do código
-- Configura credenciais AWS
-- Faz login no ECR
-- Constrói a imagem Docker
-- Faz push para o ECR com múltiplas tags
-
-### 2. **Deploy no EKS**
-- Configura kubectl
-- Conecta ao cluster EKS
-- Aplica ConfigMap e Secret
-- Atualiza deployment com nova imagem
-- Monitora o rollout
-
-## 🔧 Configuração Inicial Necessária
-
-### 1. **Criar repositório ECR**
-```bash
-aws ecr create-repository --repository-name backoffice/cloudfix-bko-api-back-stg --region us-east-1
+AWS_ACCESS_KEY_ID     # Access Key da AWS
+AWS_SECRET_ACCESS_KEY # Secret Key da AWS
 ```
 
-### 2. **Configurar cluster EKS**
-Certifique-se de que o cluster `cloudfix-cluster` existe e está acessível.
+## 🛡️ Proteções de Segurança
 
-### 3. **Namespace Kubernetes**
-```bash
-kubectl create namespace backoffice
+### Deploy Workflow
+- ✅ Validação de formato Terraform
+- ✅ Security scan automático
+- ✅ Plan obrigatório antes do apply
+- ✅ Aprovação manual para produção
+
+### Destroy Workflow
+- ⚠️ Confirmação "DESTROY" obrigatória
+- ⚠️ Produção bloqueada por código
+- ⚠️ Motivo obrigatório para auditoria
+- ⚠️ Aprovação manual sempre necessária
+- ⚠️ Delay de 10 segundos antes da destruição
+
+## 📊 Environments
+
+Configure os seguintes environments no GitHub:
+
+### Para Deploy
+- `dev` - Desenvolvimento
+- `hml` - Homologação  
+- `prod` - Produção (com aprovação obrigatória)
+
+### Para Destroy
+- `dev-destroy` - Destruição desenvolvimento
+- `hml-destroy` - Destruição homologação
+
+## 🔄 Fluxo de Trabalho
+
+### Desenvolvimento
+```
+1. Push código → Auto deploy hml
+2. Teste em hml
+3. Manual deploy prod (com aprovação)
 ```
 
-## 🎯 Triggers do Pipeline
+### Limpeza
+```
+1. Manual destroy dev/hml
+2. Confirmação obrigatória
+3. Auditoria automática
+```
 
-O pipeline será executado quando:
-- Push na branch `main` (deploy em production)
-- Push na branch `devops` (deploy em staging)
-- Pull Request para `main` (apenas build, sem deploy)
+## 📝 Logs e Auditoria
 
-## 📋 Tags de Imagem Geradas
+Todos os workflows geram:
+- ✅ Step summaries detalhados
+- ✅ Logs de auditoria
+- ✅ Outputs da infraestrutura
+- ✅ Timestamps de execução
 
-O pipeline cria as seguintes tags automaticamente:
-- `latest` (apenas para branch main)
-- `v{run_number}` (número sequencial do GitHub Actions)
-- `{branch}-{sha}` (branch + hash do commit)
-- `{branch}` (nome da branch)
+## 🚨 Troubleshooting
 
-## 🔍 Monitoramento
+### Deploy falha
+1. Verificar secrets AWS
+2. Verificar sintaxe Terraform
+3. Verificar permissões IAM
+4. Consultar logs detalhados
 
-O pipeline inclui verificações de:
-- Status do cluster
-- Status do deployment
-- Pods em execução
-- Logs de rollout
+### Destroy falha
+1. Verificar dependências de recursos
+2. Verificar state lock
+3. Executar destroy manual se necessário
+4. Contatar equipe de infraestrutura
 
-## ⚠️ Importante
+---
 
-1. **Permissões AWS**: O usuário AWS deve ter permissões para:
-   - ECR (push/pull de imagens)
-   - EKS (acesso ao cluster)
-   - IAM (assumir roles se necessário)
-
-2. **Arquivos Kubernetes**: Certifique-se de que os arquivos em `.deploy/eks/` estão corretos:
-   - `cloudfix-bko-configmap.yml`
-   - `cloudfix-bko-secret.yml`
-   - `cloudfix-bko-deployment.yml`
-
-3. **Ambientes**: Configure os ambientes `production` e `staging` no GitHub se quiser aprovação manual para deploys.
+**Última atualização**: Outubro 2024
