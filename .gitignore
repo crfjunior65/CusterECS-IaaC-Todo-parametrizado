@@ -102,3 +102,4 @@ plan.out
 s3/plan.out
 .amazon*
 *.swp
+*.odt*
