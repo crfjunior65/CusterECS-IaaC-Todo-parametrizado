@@ -85,6 +85,7 @@ jobs:
         run: |
           terraform plan \
             -var="environment=${{ github.event.inputs.environment }}" \
+            -var="aws_profile=" \
             -out=tfplan
 
       - name: Upload Plan
@@ -162,7 +163,7 @@ jobs:
         run: terraform init
 
       - name: Terraform Plan
-        run: terraform plan -var="environment=hml"
+        run: terraform plan -var="environment=hml" -var="aws_profile="
 
       - name: Terraform Apply
-        run: terraform apply -auto-approve -var="environment=hml"
+        run: terraform apply -auto-approve -var="environment=hml" -var="aws_profile="

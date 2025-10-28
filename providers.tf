@@ -11,8 +11,8 @@ terraform {
     key     = "terraform/ClusterECS/terraform.tfstate"
     region  = "us-east-1"
     encrypt = true
-    # Profile usado apenas quando definido (local)
-    profile = var.aws_profile != "" ? var.aws_profile : null
+    # Profile não pode usar variáveis no backend
+    # Configure via: terraform init -backend-config="profile=CloudFix"
   }
 }
 
