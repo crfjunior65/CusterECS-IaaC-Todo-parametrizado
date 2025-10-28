@@ -234,3 +234,8 @@ variable "tags" {
     Owner       = "devops-team"
   }
 }
+
+variable "profile" {
+  description = "Profile Account AWS"
+  type        = string
+}

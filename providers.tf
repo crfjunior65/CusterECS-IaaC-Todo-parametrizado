@@ -7,18 +7,19 @@ terraform {
   }
 
   backend "s3" {
-    bucket  = "s3-cloudfix-tfstate-ecs"
-    key     = "terraform.tfstate"
+    bucket  = "cloudfix-2025"
+    key     = "terraform/ClusterECS/terraform.tfstate"
     region  = "us-east-1"
     encrypt = true
+    profile = "CloudFix"
     # terraform state locks
     #dynamodb_table = "terraform-locks"
   }
 }
 
 provider "aws" {
-  region = var.region
-
+  region  = var.region
+  profile = var.profile
   default_tags {
     tags = local.common_tags
   }
