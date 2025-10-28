@@ -369,6 +369,7 @@ jobs:
 
 - **[Guia de Deploy Rápido](DEPLOY_GUIDE.md)** - Deploy em 5 minutos
 - **[Documentação de Variáveis](VARIABLES.md)** - Todas as variáveis disponíveis
+- **[Workflows Detalhado](docs/WORKFLOWS_DETALHADO.md)** - Explicação linha por linha dos workflows
 - **[Migração EKS → ECS](X.MIGRACAO-EKS-PARA-ECS.md)** - Histórico da migração
 - **[Análise de Custos](X.COST_ANALYSIS.md)** - Comparação detalhada de custos
 
