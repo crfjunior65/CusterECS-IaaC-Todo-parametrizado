@@ -4,19 +4,29 @@ name: Deploy Infrastructure
 on:
   workflow_dispatch:
     inputs:
+      environment:
+        description: 'Environment to deploy'
+        required: true
+        default: 'hml'
+        type: choice
+        options:
+          - hml
+          - prod
       confirm:
         description: 'Type "deploy" to confirm'
         required: true
 
 jobs:
   deploy:
+    name: Deploy to ${{ github.event.inputs.environment }}
     runs-on: ubuntu-latest
     if: github.event.inputs.confirm == 'deploy'
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-      - name: Configure AWS
+      - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
@@ -25,12 +35,24 @@ jobs:
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.5.0
 
-      - name: Override aws_profile
-        run: |
-          sed -i 's/aws_profile.*=.*/aws_profile = ""/' terraform.tfvars
+      - name: Terraform Init
+        run: terraform init
 
-      - name: Deploy
+      - name: Terraform Validate
+        run: terraform validate
+
+      - name: Terraform Plan
+        run: terraform plan -out=tfplan
+
+      - name: Terraform Apply
+        run: terraform apply tfplan
+
+      - name: Output important values
         run: |
-          terraform init
-          terraform apply -auto-approve
+          echo "## Deployment Summary" >> $GITHUB_STEP_SUMMARY
+          echo "- Environment: ${{ github.event.inputs.environment }}" >> $GITHUB_STEP_SUMMARY
+          echo "- ECS Cluster: $(terraform output -raw ecs_cluster_name)" >> $GITHUB_STEP_SUMMARY
+          echo "- ALB DNS: $(terraform output -raw alb_dns_name)" >> $GITHUB_STEP_SUMMARY
