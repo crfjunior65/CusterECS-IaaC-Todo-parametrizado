@@ -27,6 +27,5 @@ jobs:
 
       - name: Deploy
         run: |
-          export TF_VAR_aws_profile=""
-          terraform init
-          terraform apply -auto-approve
+          terraform init -var="aws_profile="
+          terraform apply -var="aws_profile=" -auto-approve
