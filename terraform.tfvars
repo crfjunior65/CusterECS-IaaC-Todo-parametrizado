@@ -60,7 +60,7 @@ valkey_num_nodes      = 1
 project_name = "plataforma-bet"
 prefix       = "cloudfix"
 environment  = "hml"
-profile      = "CloudFix" ### "default"
+#aws_profile  = "CloudFix" ### "default"
 
 # Bastion Configuration - Comentado para criar novo EIP
 # aws_eip_public_ip = "3.220.103.33"

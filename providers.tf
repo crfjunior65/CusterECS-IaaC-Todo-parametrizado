@@ -5,15 +5,6 @@ terraform {
       version = "~> 6.0"
     }
   }
-
-  backend "s3" {
-    bucket  = "cloudfix-2025"
-    key     = "terraform/ClusterECS/terraform.tfstate"
-    region  = "us-east-1"
-    encrypt = true
-    # Profile não pode usar variáveis no backend
-    # Configure via: terraform init -backend-config="profile=CloudFix"
-  }
 }
 
 provider "aws" {
