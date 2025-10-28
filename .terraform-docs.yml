@@ -1,0 +1,60 @@
+---
+formatter: "markdown table"
+
+version: ">= 0.15.0"
+
+output:
+  file: "README.md"
+  mode: replace
+  template: |-
+    <!-- BEGIN_TF_DOCS -->
+    # 🚀 Terraform AWS EKS Project
+
+    ## 📝 Project Overview
+
+    This project provides a robust and scalable infrastructure for running containerized applications on AWS using
+    Terraform. It provisions a complete EKS (Elastic Kubernetes Service) cluster with all the necessary components,
+    including networking, database, load balancing, and monitoring.
+
+    **Please replace this section with a more detailed description of your project's goals and use case.**
+
+    ---
+
+    ## 🏗️ Architecture
+
+    The infrastructure is composed of the following main components:
+
+    *   🌐 **Networking**: A custom VPC with public and private subnets to ensure a secure and isolated environment for
+        the different resources.
+
+    *   ⚙️ **Amazon EKS (Elastic Kubernetes Service)**: A managed Kubernetes service to deploy, manage, and scale
+        containerized applications.
+
+    *   🗃️ **Amazon RDS (Relational Database Service)**: A managed relational database for the applications, configured
+        for high availability and scalability.
+
+    *   ⚖️ **Application Load Balancer (ALB)**: To distribute incoming traffic across the applications running in the
+        EKS cluster.
+
+    *   📈 **Monitoring & Observability**: Integration with Amazon CloudWatch, including Container Insights and custom
+        dashboards, for monitoring the health and performance of the cluster and applications.
+
+    For a more detailed view, please refer to the diagrams in the `diagramas/` directory.
+
+    ---
+
+    ## 🌱 Project Evolution
+
+    This section should describe the history and evolution of the project. You can include information about major
+    milestones, versions, and future plans.
+
+    **Example:**
+
+    *   **v1.0 (2023-01-15):** Initial version of the project, with the basic EKS cluster and networking setup.
+    *   **v1.1 (2023-02-20):** Added RDS integration and the monitoring module.
+    *   **v2.0 (2023-04-10):** Major refactoring, introduced modules for better organization and reusability.
+
+    ---
+
+    {{ .Content }}
+    <!-- END_TF_DOCS -->

@@ -1,0 +1,75 @@
+name: Infra Up (manual)
+
+on:
+  workflow_dispatch:
+    inputs:
+      apply_manifests:
+        description: 'Apply k8s manifests after terraform (true/false)'
+        required: false
+        default: 'true'
+
+concurrency:
+  group: infra-up-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  infra-up:
+    name: Infra Up
+    runs-on: ubuntu-latest
+    env:
+      # Default region; override via repository environment secrets or by
+      # setting the environment variable in the environment protected by
+      # the repository (recommended).
+      AWS_REGION: us-east-1
+      # Inject AWS credentials from repository secrets into the job env.
+      # These remain secrets in GitHub and will not be printed by default.
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      # Run terraform non-interactively in CI and apply manifests by default
+      TF_NONINTERACTIVE: '1'
+      # Timeouts and intervals for the UpTerraform.sh wait logic (seconds)
+      WAIT_INTERVAL: '15'
+      WAIT_CLUSTER_TIMEOUT: '3600'
+      WAIT_NODEGROUP_TIMEOUT: '3600'
+      WAIT_NODE_READY_TIMEOUT: '1800'
+      WAIT_INGRESS_TIMEOUT: '1800'
+    environment: infrastructure
+    timeout-minutes: 720
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: '1.6.0'
+
+      - name: Install kubectl
+        uses: azure/setup-kubectl@v3
+        with:
+          version: 'v1.28.0'
+
+      - name: Print tool versions
+        run: |
+          terraform -version || true
+          kubectl version --client || true
+          aws --version || true
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ env.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ env.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Run UpTerraform (non-interactive)
+        working-directory: terraform-aws
+        run: |
+          chmod +x UpTerraform.sh
+          TF_NONINTERACTIVE=1 TF_APPLY_MANIFESTS=${{ inputs.apply_manifests }} ./UpTerraform.sh | tee up-terraform.log
+
+      - name: Upload infra logs
+        uses: actions/upload-artifact@v4
+        with:
+          name: infra-up-logs
+          path: terraform-aws/up-terraform.log

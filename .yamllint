@@ -1,0 +1,22 @@
+---
+extends: default
+
+ignore: |
+  .terraform/
+  **/.terraform/*
+  # (opcional) ignorar charts gerados/venvs/etc.
+
+rules:
+  # Permitir linhas maiores, mas ainda alertar
+  line-length:
+    max: 120
+    allow-non-breakable-words: true
+
+  # Evitar falso positivo no GitHub Actions (vamos desabilitar no arquivo com comentário)
+  truthy:
+    allowed-values: ["true", "false"]
+
+  # Indentação padrão de 2 espaços (útil p/ k8s)
+  indentation:
+    spaces: 2
+    indent-sequences: true

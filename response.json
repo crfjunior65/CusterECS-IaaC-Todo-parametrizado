@@ -1,0 +1,1 @@
+{"statusCode": 400, "body": "{\"error\": \"N\\u00e3o \\u00e9 poss\\u00edvel iniciar RDS. Status atual: stopping\", \"instance\": \"postgres\", \"status\": \"stopping\"}"}

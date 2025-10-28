@@ -1,0 +1,109 @@
+---
+name: EKS ALB Validate (manual)
+
+on:
+  workflow_dispatch: {}
+
+env:
+  AWS_REGION: us-east-1
+  EKS_CLUSTER_NAME: pbet-cluster
+
+jobs:
+  validate-alb:
+    name: Validate ALB from Ingress
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Install kubectl
+        uses: azure/setup-kubectl@v3
+        with:
+          version: 'v1.28.0'
+
+      - name: Update kubeconfig
+        run: aws eks update-kubeconfig --region ${{ env.AWS_REGION }} --name ${{ env.EKS_CLUSTER_NAME }}
+
+      - name: Ensure namespace
+        run: kubectl create namespace backoffice --dry-run=client -o yaml | kubectl apply -f -
+
+      - name: Cleanup previous test resources
+        run: |
+          kubectl delete -f k8s/alb-ingress.yaml -n backoffice --ignore-not-found=true || true
+          kubectl delete -f k8s/alb-service.yaml -n backoffice --ignore-not-found=true || true
+          kubectl delete -f k8s/alb-deployment.yaml -n backoffice --ignore-not-found=true || true
+          sleep 5
+
+      - name: Apply test manifests
+        run: kubectl apply -f k8s/ -n backoffice
+
+      - name: Wait for Ingress hostname
+        id: wait_ingress
+        run: |
+          set -euo pipefail
+          INGRESS_NAME=test-lb-nginx-ingress
+          NAMESPACE=backoffice
+          HOST=""
+          for i in $(seq 1 60); do
+            HOST=$(kubectl get ingress ${INGRESS_NAME} -n ${NAMESPACE} \
+              -o jsonpath='{.status.loadBalancer.ingress[0].hostname}' 2>/dev/null || true)
+            if [ -n "${HOST}" ]; then
+              echo "host=${HOST}" >> $GITHUB_OUTPUT
+              exit 0
+            fi
+            echo "Waiting for ingress hostname (${i}/60)"
+            sleep 10
+          done
+          echo "Ingress hostname not detected"
+          exit 1
+
+      - name: Verify ALB in AWS
+        id: verify_alb
+        run: |
+          set -euo pipefail
+          HOST=${{ steps.wait_ingress.outputs.host }}
+          echo "Checking AWS for ALB with DNS: ${HOST}"
+          ALB_ARN=""
+          for i in $(seq 1 30); do
+            # Use a shorter query variable to avoid long line length
+            QUERY="LoadBalancers[?DNSName=='${HOST}'].LoadBalancerArn"
+            ALB_ARN=$(aws elbv2 describe-load-balancers \
+              --region ${AWS_REGION} \
+              --query "${QUERY}" \
+              --output text || true)
+            if [ -n "${ALB_ARN}" ] && [ "${ALB_ARN}" != "None" ]; then
+              echo "alb_arn=${ALB_ARN}" >> $GITHUB_OUTPUT
+              exit 0
+            fi
+            echo "ALB not visible yet (${i}/30)"
+            sleep 10
+          done
+          echo "ALB not found for DNS ${HOST}"
+          exit 1
+
+      - name: Collect diagnostics (on failure)
+        if: failure()
+        run: |
+          mkdir -p /tmp/eks-validate-artifacts
+          kubectl describe ingress test-lb-nginx-ingress -n backoffice \
+            > /tmp/eks-validate-artifacts/ingress-desc.txt 2>&1 || true
+          kubectl get events -n backoffice --sort-by=.metadata.creationTimestamp \
+            > /tmp/eks-validate-artifacts/events.txt 2>&1 || true
+          aws elbv2 describe-load-balancers \
+            --region ${AWS_REGION} \
+            --output json \
+            > /tmp/eks-validate-artifacts/elbs.json 2>&1 || true
+
+      - name: Upload diagnostics artifact (on failure)
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: eks-validate-diagnostics
+          path: /tmp/eks-validate-artifacts/

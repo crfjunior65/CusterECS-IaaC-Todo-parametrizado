@@ -1,8 +1,8 @@
-# Plataforma Bet - Infraestrutura ECS Fargate
+# CloudFix - Infraestrutura ECS Fargate
 
 ## 📋 Visão Geral
 
-Este projeto implementa uma infraestrutura completa para a **Plataforma Bet** utilizando **Amazon ECS Fargate**, oferecendo uma solução serverless, escalável e econômica para aplicações containerizadas.
+Este projeto implementa uma infraestrutura completa para a **CloudFix** utilizando **Amazon ECS Fargate**, oferecendo uma solução serverless, escalável e econômica para aplicações containerizadas.
 
 ### 🏗️ Arquitetura
 
@@ -443,6 +443,6 @@ Este projeto está licenciado sob a [MIT License](LICENSE).
 
 ---
 
-**Desenvolvido com ❤️ pela equipe DevOps da Plataforma Bet**
+**Desenvolvido com ❤️ pela equipe DevOps da CloudFix**
 
 *Última atualização: Outubro 2024*

@@ -1,0 +1,883 @@
+{
+    "widgets": [
+        {
+            "type": "text",
+            "x": 0,
+            "y": 0,
+            "width": 24,
+            "height": 2,
+            "properties": {
+                "markdown": "# 🚀 **PLATAFORMA-BET** | **DASHBOARD FUNCIONAL COMPLETO** ✅\n## **Cluster EKS:** `${cluster_name}` | **Região:** `${region}` | **Ambiente: ${upper(environment)}**"
+            }
+        },
+        {
+            "type": "text",
+            "x": 0,
+            "y": 2,
+            "width": 24,
+            "height": 1,
+            "properties": {
+                "markdown": "---\n### 📊 **CONTAINER INSIGHTS - MÉTRICAS FUNCIONAIS**"
+            }
+        },
+        {
+            "type": "metric",
+            "x": 0,
+            "y": 3,
+            "width": 6,
+            "height": 6,
+            "properties": {
+                "view": "singleValue",
+                "metrics": [
+                    [ "ContainerInsights", "node_number_of_running_pods", "ClusterName", "${cluster_name}" ]
+                ],
+                "region": "${region}",
+                "title": "🚀 PODS EM EXECUÇÃO (POR NÓ)",
+                "stat": "Average",
+                "period": 300
+            }
+        },
+        {
+            "type": "metric",
+            "x": 6,
+            "y": 3,
+            "width": 6,
+            "height": 6,
+            "properties": {
+                "view": "singleValue",
+                "metrics": [
+                    [ "ContainerInsights", "namespace_number_of_running_pods", "ClusterName", "${cluster_name}", "Namespace", "default" ]
+                ],
+                "region": "${region}",
+                "title": "📦 PODS NO NAMESPACE DEFAULT",
+                "stat": "Average",
+                "period": 300
+            }
+        },
+        {
+            "type": "metric",
+            "x": 12,
+            "y": 3,
+            "width": 12,
+            "height": 6,
+            "properties": {
+                "view": "timeSeries",
+                "metrics": [
+                    [ "ContainerInsights", "node_cpu_utilization", "ClusterName", "${cluster_name}", { "label": "🔥 CPU dos Nós %" } ],
+                    [ ".", "node_memory_utilization", ".", ".", { "label": "💾 Memória dos Nós %" } ]
+                ],
+                "region": "${region}",
+                "title": "📈 PERFORMANCE DOS NÓS",
+                "yAxis": {
+                    "left": {
+                        "min": 0,
+                        "max": 100
+                    }
+                },
+                "annotations": {
+                    "horizontal": [
+                        {
+                            "label": "CRÍTICO",
+                            "value": 80,
+                            "color": "#d62728"
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "type": "text",
+            "x": 0,
+            "y": 9,
+            "width": 24,
+            "height": 1,
+            "properties": {
+                "markdown": "---\n### 🌐 **REDE E TRÁFEGO**"
+            }
+        },
+        {
+            "type": "metric",
+            "x": 0,
+            "y": 10,
+            "width": 12,
+            "height": 6,
+            "properties": {
+                "view": "timeSeries",
+                "metrics": [
+                    [ "ContainerInsights", "pod_network_rx_bytes", "ClusterName", "${cluster_name}", { "label": "📥 Network IN (Bytes)" } ],
+                    [ ".", "pod_network_tx_bytes", ".", ".", { "label": "📤 Network OUT (Bytes)" } ]
+                ],
+                "region": "${region}",
+                "title": "🌐 TRÁFEGO DE REDE DOS PODS",
+                "period": 300,
+                "stat": "Average"
+            }
+        },
+        {
+            "type": "metric",
+            "x": 12,
+            "y": 10,
+            "width": 12,
+            "height": 6,
+            "properties": {
+                "view": "timeSeries",
+                "metrics": [
+                    [ "ContainerInsights", "pod_cpu_utilization", "ClusterName", "${cluster_name}", { "label": "🔥 CPU dos Pods %" } ],
+                    [ ".", "pod_memory_utilization", ".", ".", { "label": "💾 Memória dos Pods %" } ]
+                ],
+                "region": "${region}",
+                "title": "📊 UTILIZAÇÃO DOS PODS",
+                "yAxis": {
+                    "left": {
+                        "min": 0,
+                        "max": 100
+                    }
+                },
+                "period": 300
+            }
+        },
+        {
+            "type": "text",
+            "x": 0,
+            "y": 16,
+            "width": 24,
+            "height": 1,
+            "properties": {
+                "markdown": "---\n### 🌐 **APPLICATION LOAD BALANCER (ALB)**"
+            }
+        },
+        {
+            "type": "metric",
+            "x": 0,
+            "y": 17,
+            "width": 8,
+            "height": 6,
+            "properties": {
+                "view": "timeSeries",
+                "metrics": [
+                    [ { "expression": "SEARCH('{AWS/ApplicationELB,LoadBalancer} MetricName=\"RequestCount\"', 'Sum', 60)", "label": "📊 Requisições (Todos ALBs)" } ]
+                ],
+                "region": "${region}",
+                "title": "📊 REQUISIÇÕES POR MINUTO",
+                "period": 60,
+                "stat": "Sum"
+            }
+        },
+        {
+            "type": "metric",
+            "x": 8,
+            "y": 17,
+            "width": 8,
+            "height": 6,
+            "properties": {
+                "view": "timeSeries",
+                "metrics": [
+                    [ { "expression": "SEARCH('{AWS/ApplicationELB,LoadBalancer} MetricName=\"TargetResponseTime\"', 'Average', 60)", "label": "⚡ Latência Média (Todos ALBs)" } ]
+                ],
+                "region": "${region}",
+                "title": "⚡ LATÊNCIA (segundos)",
+                "period": 60,
+                "stat": "Average"
+            }
+        },
+        {
+            "type": "metric",
+            "x": 16,
+            "y": 17,
+            "width": 8,
+            "height": 6,
+            "properties": {
+                "view": "timeSeries",
+                "metrics": [
+                    [ { "expression": "SEARCH('{AWS/ApplicationELB,LoadBalancer} MetricName=\"HTTPCode_Target_2XX_Count\"', 'Sum', 60)", "label": "✅ Sucesso (2XX)" } ],
+                    [ { "expression": "SEARCH('{AWS/ApplicationELB,LoadBalancer} MetricName=\"HTTPCode_Target_4XX_Count\"', 'Sum', 60)", "label": "⚠️ Erro Cliente (4XX)" } ],
+                    [ { "expression": "SEARCH('{AWS/ApplicationELB,LoadBalancer} MetricName=\"HTTPCode_Target_5XX_Count\"', 'Sum', 60)", "label": "❌ Erro Servidor (5XX)" } ]
+                ],
+                "region": "${region}",
+                "title": "🚦 CÓDIGOS DE RESPOSTA HTTP",
+                "period": 60,
+                "stat": "Sum"
+            }
+        },
+        {
+            "type": "text",
+            "x": 0,
+            "y": 23,
+            "width": 24,
+            "height": 1,
+            "properties": {
+                "markdown": "---\n### 💾 **BANCO DE DADOS (RDS)**"
+            }
+        },
+        {
+            "type": "metric",
+            "x": 0,
+            "y": 24,
+            "width": 8,
+            "height": 6,
+            "properties": {
+                "view": "timeSeries",
+                "metrics": [
+                    [ "AWS/RDS", "CPUUtilization", "DBInstanceIdentifier", "${db_instance_identifier}" ]
+                ],
+                "region": "${region}",
+                "title": "🔥 CPU RDS (%)",
+                "period": 300,
+                "stat": "Average",
+                "yAxis": {
+                    "left": {
+                        "min": 0,
+                        "max": 100
+                    }
+                }
+            }
+        },
+        {
+            "type": "metric",
+            "x": 8,
+            "y": 24,
+            "width": 8,
+            "height": 6,
+            "properties": {
+                "view": "timeSeries",
+                "metrics": [
+                    [ "AWS/RDS", "DatabaseConnections", "DBInstanceIdentifier", "${db_instance_identifier}" ]
+                ],
+                "region": "${region}",
+                "title": "🔗 CONEXÕES ATIVAS",
+                "period": 300,
+                "stat": "Average"
+            }
+        },
+        {
+            "type": "metric",
+            "x": 16,
+            "y": 24,
+            "width": 8,
+            "height": 6,
+            "properties": {
+                "view": "timeSeries",
+                "metrics": [
+                    [ "AWS/RDS", "ReadLatency", "DBInstanceIdentifier", "${db_instance_identifier}", { "label": "📖 Leitura" } ],
+                    [ ".", "WriteLatency", ".", ".", { "label": "✍️ Escrita" } ]
+                ],
+                "region": "${region}",
+                "title": "⏱️ LATÊNCIA DE I/O (ms)",
+                "period": 300,
+                "stat": "Average"
+            }
+        },
+        {
+            "type": "text",
+            "x": 0,
+            "y": 25,
+            "width": 24,
+            "height": 1,
+            "properties": {
+                "markdown": "---\n### 📊 **EKS LANDING PAGE**"
+            }
+        },
+        {
+            "type": "metric",
+            "x": 0,
+            "y": 30,
+            "width": 6,
+            "height": 6,
+            "properties": {
+                "region": "${region}",
+                "title": "EKS Landing Page Control Plane Widget Total Server Requests",
+                "legend": {
+                    "position": "bottom"
+                },
+                "timezone": "LOCAL",
+                "metrics": [
+                    [ { "id": "expr1", "color": "#1f77b4", "label": "Max API server requests", "expression": "SELECT MAX(apiserver_request_total) FROM SCHEMA(ContainerInsights, ClusterName) " } ]
+                ],
+                "liveData": false,
+                "period": 60,
+                "view": "singleValue",
+                "sparkline": true,
+                "yAxis": {
+                    "left": {
+                        "showUnits": false,
+                        "label": "Percent"
+                    }
+                }
+            }
+        },
+        {
+            "type": "metric",
+            "x": 6,
+            "y": 30,
+            "width": 6,
+            "height": 6,
+            "properties": {
+                "region": "${region}",
+                "title": "EKS Landing Page Control Plane Widget Server Request Latency",
+                "legend": {
+                    "position": "bottom"
+                },
+                "timezone": "LOCAL",
+                "metrics": [
+                    [ { "id": "expr1", "color": "#1f77b4", "label": "Average API server requests latency", "expression": "SELECT AVG(apiserver_request_duration_seconds) FROM SCHEMA(ContainerInsights, ClusterName) " } ]
+                ],
+                "liveData": false,
+                "period": 60,
+                "view": "singleValue",
+                "sparkline": true,
+                "yAxis": {
+                    "left": {
+                        "showUnits": false,
+                        "label": "Percent"
+                    }
+                }
+            }
+        },
+        {
+            "type": "metric",
+            "x": 12,
+            "y": 30,
+            "width": 6,
+            "height": 6,
+            "properties": {
+                "region": "${region}",
+                "title": "EKS Landing Page Control Plane Widget Total Number Of Stored Objects",
+                "legend": {
+                    "position": "bottom"
+                },
+                "timezone": "LOCAL",
+                "metrics": [
+                    [ { "id": "expr1", "color": "#1f77b4", "label": "Total number of stored objects", "expression": "SELECT MAX(apiserver_storage_objects) FROM SCHEMA(ContainerInsights, ClusterName) " } ]
+                ],
+                "liveData": false,
+                "period": 60,
+                "view": "singleValue",
+                "sparkline": true,
+                "yAxis": {
+                    "left": {
+                        "showUnits": false,
+                        "label": "Percent"
+                    }
+                }
+            }
+        },
+        {
+            "type": "metric",
+            "x": 18,
+            "y": 30,
+            "width": 6,
+            "height": 6,
+            "properties": {
+                "region": "${region}",
+                "title": "EKS Landing Page Control Plane Widget Admission Controller Latency",
+                "legend": {
+                    "position": "bottom"
+                },
+                "timezone": "LOCAL",
+                "metrics": [
+                    [ { "id": "expr1", "color": "#1f77b4", "label": "Average admission controller latency", "expression": "SELECT AVG(apiserver_admission_controller_admission_duration_seconds) FROM SCHEMA(ContainerInsights, ClusterName) " } ]
+                ],
+                "liveData": false,
+                "period": 60,
+                "view": "singleValue",
+                "sparkline": true,
+                "yAxis": {
+                    "left": {
+                        "showUnits": false,
+                        "label": "Percent"
+                    }
+                }
+            }
+        },
+        {
+            "type": "metric",
+            "x": 0,
+            "y": 36,
+            "width": 6,
+            "height": 6,
+            "properties": {
+                "region": "${region}",
+                "title": "Top Nodes per CPU Utilization",
+                "legend": {
+                    "position": "right"
+                },
+                "timezone": "LOCAL",
+                "metrics": [
+                    [ { "expression": "SELECT MAX(node_cpu_utilization) FROM SCHEMA(ContainerInsights, ClusterName, InstanceId, NodeName)  GROUP BY NodeName,InstanceId,ClusterName ORDER BY MAX() DESC LIMIT 10" } ]
+                ],
+                "liveData": false,
+                "period": 60,
+                "annotations": {
+                    "horizontal": [
+                        {
+                            "value": 80,
+                            "label": "High Utilization >="
+                        }
+                    ]
+                },
+                "yAxis": {
+                    "left": {
+                        "min": 0,
+                        "showUnits": false,
+                        "label": "Percent"
+                    }
+                }
+            }
+        },
+        {
+            "type": "metric",
+            "x": 6,
+            "y": 36,
+            "width": 6,
+            "height": 6,
+            "properties": {
+                "region": "${region}",
+                "title": "Top Nodes per Memory Utilization",
+                "legend": {
+                    "position": "right"
+                },
+                "timezone": "LOCAL",
+                "metrics": [
+                    [ { "expression": "SELECT MAX(node_memory_utilization) FROM SCHEMA(ContainerInsights, ClusterName, InstanceId, NodeName)  GROUP BY NodeName,InstanceId,ClusterName ORDER BY MAX() DESC LIMIT 10" } ]
+                ],
+                "liveData": false,
+                "period": 60,
+                "annotations": {
+                    "horizontal": [
+                        {
+                            "value": 80,
+                            "label": "High Utilization >="
+                        }
+                    ]
+                },
+                "yAxis": {
+                    "left": {
+                        "min": 0,
+                        "showUnits": false,
+                        "label": "Percent"
+                    }
+                }
+            }
+        },
+        {
+            "type": "text",
+            "x": 0,
+            "y": 38,
+            "width": 24,
+            "height": 1,
+            "properties": {
+                "markdown": "---\n### 📊 **Pods Performance monitoring - MÉTRICAS FUNCIONAIS**"
+            }
+        },
+        {
+            "type": "metric",
+            "x": 12,
+            "y": 44,
+            "width": 3,
+            "height": 6,
+            "properties": {
+                "region": "${region}",
+                "title": "Number of containers",
+                "legend": {
+                    "position": "bottom"
+                },
+                "timezone": "LOCAL",
+                "metrics": [
+                    [ { "expression": "IF(PERIOD(m1m0)>=60, m1m0/(PERIOD(m1m0)/60), m1m0)", "label": "Sum", "color": "#1f77b4" } ],
+                    [ "ContainerInsights", "pod_number_of_containers", "ClusterName", "${cluster_name}", { "id": "m1m0", "stat": "Sum", "visible": false } ]
+                ],
+                "liveData": false,
+                "period": 60,
+                "view": "singleValue",
+                "sparkline": true
+            }
+        },
+        {
+            "type": "metric",
+            "x": 15,
+            "y": 44,
+            "width": 3,
+            "height": 6,
+            "properties": {
+                "region": "${region}",
+                "title": "Number of running containers",
+                "legend": {
+                    "position": "bottom"
+                },
+                "timezone": "LOCAL",
+                "metrics": [
+                    [ { "expression": "IF(PERIOD(m1m0)>=60, m1m0/(PERIOD(m1m0)/60), m1m0)", "label": "Sum", "color": "#1f77b4" } ],
+                    [ "ContainerInsights", "pod_number_of_running_containers", "ClusterName", "${cluster_name}", { "id": "m1m0", "stat": "Sum", "visible": false } ]
+                ],
+                "liveData": false,
+                "period": 60,
+                "view": "singleValue",
+                "sparkline": true
+            }
+        },
+        {
+            "type": "metric",
+            "x": 18,
+            "y": 44,
+            "width": 3,
+            "height": 6,
+            "properties": {
+                "region": "${region}",
+                "title": "Pod CPU utilization",
+                "legend": {
+                    "position": "bottom"
+                },
+                "timezone": "LOCAL",
+                "metrics": [
+                    [ "ContainerInsights", "pod_cpu_utilization", "ClusterName", "${cluster_name}", { "id": "expr1m0", "label": "Maximum", "color": "#1f77b4", "stat": "Maximum" } ]
+                ],
+                "liveData": false,
+                "period": 60,
+                "view": "singleValue",
+                "sparkline": true
+            }
+        },
+        {
+            "type": "metric",
+            "x": 21,
+            "y": 44,
+            "width": 3,
+            "height": 6,
+            "properties": {
+                "region": "${region}",
+                "title": "Pod memory utilization",
+                "legend": {
+                    "position": "bottom"
+                },
+                "timezone": "LOCAL",
+                "metrics": [
+                    [ "ContainerInsights", "pod_memory_utilization", "ClusterName", "${cluster_name}", { "id": "expr1m0", "label": "Maximum", "color": "#1f77b4", "stat": "Maximum" } ]
+                ],
+                "liveData": false,
+                "period": 60,
+                "view": "singleValue",
+                "sparkline": true
+            }
+        },
+        {
+            "type": "metric",
+            "x": 0,
+            "y": 44,
+            "width": 6,
+            "height": 6,
+            "properties": {
+                "region": "${region}",
+                "title": "Pod CPU utilization",
+                "legend": {
+                    "position": "bottom"
+                },
+                "timezone": "LOCAL",
+                "metrics": [
+                    [ { "id": "expr1m0", "label": "${LABEL}", "expression": "SELECT AVG(pod_cpu_utilization) FROM SCHEMA(ContainerInsights, ClusterName,FullPodName,Namespace,PodName) WHERE ClusterName='${cluster_name}'     GROUP BY FullPodName ORDER BY MAX() DESC LIMIT 10" } ]
+                ],
+                "liveData": false,
+                "period": 60,
+                "yAxis": {
+                    "left": {
+                        "showUnits": false,
+                        "label": "Percent"
+                    }
+                }
+            }
+        },
+        {
+            "type": "metric",
+            "x": 6,
+            "y": 44,
+            "width": 6,
+            "height": 6,
+            "properties": {
+                "region": "${region}",
+                "title": "Pod CPU utilization over pod limit",
+                "legend": {
+                    "position": "bottom"
+                },
+                "timezone": "LOCAL",
+                "metrics": [
+                    [ { "id": "expr1m0", "label": "${LABEL}", "expression": "SELECT AVG(pod_cpu_utilization_over_pod_limit) FROM SCHEMA(ContainerInsights, ClusterName,FullPodName,Namespace,PodName) WHERE ClusterName='${cluster_name}'      GROUP BY FullPodName ORDER BY MAX() DESC LIMIT 10" } ]
+                ],
+                "liveData": false,
+                "period": 60,
+                "yAxis": {
+                    "left": {
+                        "showUnits": false,
+                        "label": "Percent"
+                    }
+                }
+            }
+        },
+        {
+            "type": "metric",
+            "x": 12,
+            "y": 50,
+            "width": 6,
+            "height": 6,
+            "properties": {
+                "region": "${region}",
+                "title": "Pod memory utilization",
+                "legend": {
+                    "position": "bottom"
+                },
+                "timezone": "LOCAL",
+                "metrics": [
+                    [ { "id": "expr1m0", "label": "${LABEL}", "expression": "SELECT AVG(pod_memory_utilization) FROM SCHEMA(ContainerInsights, ClusterName,FullPodName,Namespace,PodName) WHERE ClusterName='${cluster_name}'      GROUP BY FullPodName ORDER BY MAX() DESC LIMIT 10" } ]
+                ],
+                "liveData": false,
+                "period": 60,
+                "yAxis": {
+                    "left": {
+                        "showUnits": false,
+                        "label": "Percent"
+                    }
+                }
+            }
+        },
+        {
+            "type": "metric",
+            "x": 18,
+            "y": 50,
+            "width": 6,
+            "height": 6,
+            "properties": {
+                "region": "${region}",
+                "title": "Pod memory utilization over pod limit",
+                "legend": {
+                    "position": "bottom"
+                },
+                "timezone": "LOCAL",
+                "metrics": [
+                    [ { "id": "expr1m0", "label": "${LABEL}", "expression": "SELECT AVG(pod_memory_utilization_over_pod_limit) FROM SCHEMA(ContainerInsights, ClusterName,FullPodName,Namespace,PodName) WHERE ClusterName='${cluster_name}'      GROUP BY FullPodName ORDER BY MAX() DESC LIMIT 10" } ]
+                ],
+                "liveData": false,
+                "period": 60,
+                "yAxis": {
+                    "left": {
+                        "showUnits": false,
+                        "label": "Percent"
+                    }
+                }
+            }
+        },
+        {
+            "type": "metric",
+            "x": 0,
+            "y": 50,
+            "width": 6,
+            "height": 6,
+            "properties": {
+                "region": "${region}",
+                "title": "Network RX",
+                "legend": {
+                    "position": "bottom"
+                },
+                "timezone": "LOCAL",
+                "metrics": [
+                    [ { "id": "expr1m0", "label": "${LABEL}", "expression": "SELECT AVG(pod_network_rx_bytes) FROM SCHEMA(ContainerInsights, ClusterName,FullPodName,Namespace,PodName) WHERE ClusterName='${cluster_name}'      GROUP BY FullPodName ORDER BY MAX() DESC LIMIT 10" } ]
+                ],
+                "liveData": false,
+                "period": 60,
+                "yAxis": {
+                    "left": {
+                        "showUnits": false
+                    }
+                }
+            }
+        },
+        {
+            "type": "metric",
+            "x": 6,
+            "y": 50,
+            "width": 6,
+            "height": 6,
+            "properties": {
+                "region": "${region}",
+                "title": "Network TX",
+                "legend": {
+                    "position": "bottom"
+                },
+                "timezone": "LOCAL",
+                "metrics": [
+                    [ { "id": "expr1m0", "label": "${LABEL}", "expression": "SELECT AVG(pod_network_tx_bytes) FROM SCHEMA(ContainerInsights, ClusterName,FullPodName,Namespace,PodName) WHERE ClusterName='${cluster_name}'      GROUP BY FullPodName ORDER BY MAX() DESC LIMIT 10" } ]
+                ],
+                "liveData": false,
+                "period": 60,
+                "yAxis": {
+                    "left": {
+                        "showUnits": false
+                    }
+                }
+            }
+        },
+        {
+            "type": "metric",
+            "x": 12,
+            "y": 56,
+            "width": 6,
+            "height": 6,
+            "properties": {
+                "region": "${region}",
+                "title": "Number of running containers",
+                "legend": {
+                    "position": "bottom"
+                },
+                "timezone": "LOCAL",
+                "metrics": [
+                    [ { "id": "m1m0", "label": "${LABEL}", "period": 60, "expression": "SELECT SUM(pod_number_of_running_containers) FROM SCHEMA(ContainerInsights, ClusterName,FullPodName,Namespace,PodName) WHERE ClusterName='${cluster_name}'      GROUP BY FullPodName ORDER BY MAX() DESC LIMIT 10" } ]
+                ],
+                "liveData": false,
+                "period": 60,
+                "yAxis": {
+                    "left": {
+                        "showUnits": false,
+                        "label": "Count"
+                    }
+                }
+            }
+        },
+        {
+            "type": "metric",
+            "x": 18,
+            "y": 56,
+            "width": 6,
+            "height": 6,
+            "properties": {
+                "region": "${region}",
+                "title": "Number of container restarts",
+                "legend": {
+                    "position": "bottom"
+                },
+                "timezone": "LOCAL",
+                "metrics": [
+                    [ { "id": "expr1m0", "label": "${LABEL}", "expression": "SELECT SUM(pod_number_of_container_restarts) FROM SCHEMA(ContainerInsights, ClusterName,FullPodName,Namespace,PodName) WHERE ClusterName='${cluster_name}'      GROUP BY FullPodName ORDER BY MAX() DESC LIMIT 10" } ]
+                ],
+                "liveData": false,
+                "period": 60,
+                "yAxis": {
+                    "left": {
+                        "showUnits": false,
+                        "label": "Count"
+                    }
+                }
+            }
+        },
+        {
+            "type": "metric",
+            "x": 0,
+            "y": 56,
+            "width": 6,
+            "height": 6,
+            "properties": {
+                "region": "${region}",
+                "title": "Pod container status running",
+                "legend": {
+                    "position": "bottom"
+                },
+                "timezone": "LOCAL",
+                "metrics": [
+                    [ { "id": "expr1m0", "label": "${LABEL}", "period": 60, "expression": "SELECT SUM(pod_container_status_running) FROM SCHEMA(ContainerInsights, ClusterName,FullPodName,Namespace,PodName) WHERE ClusterName='${cluster_name}'      GROUP BY FullPodName ORDER BY SUM() DESC LIMIT 10" } ]
+                ],
+                "liveData": false,
+                "period": 60,
+                "yAxis": {
+                    "left": {
+                        "label": "Count",
+                        "showUnits": false
+                    }
+                }
+            }
+        },
+        {
+            "type": "metric",
+            "x": 6,
+            "y": 56,
+            "width": 6,
+            "height": 6,
+            "properties": {
+                "region": "${region}",
+                "title": "Pod container status terminated",
+                "legend": {
+                    "position": "bottom"
+                },
+                "timezone": "LOCAL",
+                "metrics": [
+                    [ { "id": "expr1m0", "label": "${LABEL}", "period": 60, "expression": "SELECT SUM(pod_container_status_terminated) FROM SCHEMA(ContainerInsights, ClusterName,FullPodName,Namespace,PodName) WHERE ClusterName='${cluster_name}'      GROUP BY FullPodName ORDER BY SUM() DESC LIMIT 10" } ]
+                ],
+                "liveData": false,
+                "period": 60,
+                "yAxis": {
+                    "left": {
+                        "label": "Count",
+                        "showUnits": false
+                    }
+                }
+            }
+        },
+        {
+            "type": "metric",
+            "x": 12,
+            "y": 62,
+            "width": 6,
+            "height": 6,
+            "properties": {
+                "region": "${region}",
+                "title": "Pod container status waiting",
+                "legend": {
+                    "position": "bottom"
+                },
+                "timezone": "LOCAL",
+                "metrics": [
+                    [ { "id": "expr1m0", "label": "${LABEL}", "period": 60, "expression": "SELECT SUM(pod_container_status_waiting) FROM SCHEMA(ContainerInsights, ClusterName,FullPodName,Namespace,PodName) WHERE ClusterName='${cluster_name}'      GROUP BY FullPodName ORDER BY SUM() DESC LIMIT 10" } ]
+                ],
+                "liveData": false,
+                "period": 60,
+                "yAxis": {
+                    "left": {
+                        "label": "Count",
+                        "showUnits": false
+                    }
+                }
+            }
+        },
+        {
+            "type": "metric",
+            "x": 18,
+            "y": 62,
+            "width": 6,
+            "height": 6,
+            "properties": {
+                "region": "${region}",
+                "title": "Pod container status waiting reason crashed",
+                "legend": {
+                    "position": "bottom"
+                },
+                "timezone": "LOCAL",
+                "metrics": [
+                    [ { "id": "expr1m0", "label": "${LABEL}", "period": 60, "expression": "SELECT SUM(pod_container_status_waiting_reason_crash_loop_back_off) FROM SCHEMA(ContainerInsights, ClusterName,FullPodName,Namespace,PodName) WHERE ClusterName='${cluster_name}'      GROUP BY FullPodName ORDER BY SUM() DESC LIMIT 10" } ]
+                ],
+                "liveData": false,
+                "period": 60,
+                "yAxis": {
+                    "left": {
+                        "label": "Count",
+                        "showUnits": false
+                    }
+                }
+            }
+        },
+        {
+            "type": "text",
+            "x": 0,
+            "y": 64,
+            "width": 24,
+            "height": 1,
+            "properties": {
+                "markdown": "---\n### 📊 **Pods Performance monitoring - MÉTRICAS FUNCIONAIS**"
+            }
+        }
+    ]
+}

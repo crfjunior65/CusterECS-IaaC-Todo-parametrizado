@@ -1,0 +1,44 @@
+---
+name: "Terraform destroy"
+
+on:
+  workflow_dispatch: {}
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  terraform:
+    name: "Terraform destroy"
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Configurar as credenciais da AWS
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+          #  role-to-assume: arn:aws:iam::123456789012:role/GitHubOIDCRole
+          #  aws-region: us-east-1
+
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v2  #  Usar a versão 2 da ação
+        with:
+          terraform_version: 1.5.7
+          #  Recomendo especificar uma versão exata para consistência
+          #  Ou, se preferir a última versão estável: terraform_version: latest
+
+      - name: Terraform Init
+        working-directory: ./src
+        run: >
+          terraform init -backend-config="bucket=${{ secrets.AWS_BUCKET_NAME }}"
+          -backend-config="key=${{ secrets.AWS_BUCKET_FILE }}"
+
+      - name: Terraform destroy
+        working-directory: ./src
+        run: terraform destroy --auto-approve

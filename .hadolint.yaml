@@ -1,0 +1,4 @@
+---
+ignored:
+  - DL3008  # não exigir pin de versão
+  - DL3003  # permitir uso de cd
