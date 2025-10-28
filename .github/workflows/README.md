@@ -23,8 +23,8 @@ As seguintes variáveis estão definidas no arquivo `main.yml`:
 ```yaml
 env:
   AWS_REGION: us-east-1
-  ECR_REPOSITORY: backoffice/pbet-bko-api-back-stg
-  EKS_CLUSTER_NAME: pbet-cluster
+  ECR_REPOSITORY: backoffice/cloudfix-bko-api-back-stg
+  EKS_CLUSTER_NAME: cloudfix-cluster
 ```
 
 ### Para alterar esses valores:
@@ -51,11 +51,11 @@ env:
 
 ### 1. **Criar repositório ECR**
 ```bash
-aws ecr create-repository --repository-name backoffice/pbet-bko-api-back-stg --region us-east-1
+aws ecr create-repository --repository-name backoffice/cloudfix-bko-api-back-stg --region us-east-1
 ```
 
 ### 2. **Configurar cluster EKS**
-Certifique-se de que o cluster `pbet-cluster` existe e está acessível.
+Certifique-se de que o cluster `cloudfix-cluster` existe e está acessível.
 
 ### 3. **Namespace Kubernetes**
 ```bash
@@ -93,8 +93,8 @@ O pipeline inclui verificações de:
    - IAM (assumir roles se necessário)
 
 2. **Arquivos Kubernetes**: Certifique-se de que os arquivos em `.deploy/eks/` estão corretos:
-   - `pbet-bko-configmap.yml`
-   - `pbet-bko-secret.yml`
-   - `pbet-bko-deployment.yml`
+   - `cloudfix-bko-configmap.yml`
+   - `cloudfix-bko-secret.yml`
+   - `cloudfix-bko-deployment.yml`
 
 3. **Ambientes**: Configure os ambientes `production` e `staging` no GitHub se quiser aprovação manual para deploys.

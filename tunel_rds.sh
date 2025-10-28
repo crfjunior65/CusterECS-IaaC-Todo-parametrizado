@@ -2,7 +2,7 @@
 
 # CONFIGURAÇÕES
 RDS_DB_NAME="postgres"
-BASTION_NAME="pbet-hml-bastion-host"
+BASTION_NAME="cloudfix-hml-bastion-host"
 SSH_KEY="./aws-key-terraform.pem"
 
 # Obter IP Publico do Bastion

@@ -41,7 +41,7 @@ ECS Tasks → Security Group → Valkey Cluster
 module "valkey" {
   source = "./modules/valkey"
 
-  prefix                = "pbet"
+  prefix                = "cloudfix"
   project_name          = "plataforma-bet"
   vpc_id                = "vpc-12345"
   private_subnet_ids    = ["subnet-12345", "subnet-67890"]
@@ -54,7 +54,7 @@ module "valkey" {
 
   tags = {
     Environment = "homolog"
-    Project     = "pbet"
+    Project     = "cloudfix"
   }
 }
 ```
@@ -92,7 +92,7 @@ module "valkey" {
 
   tags = {
     Environment = "production"
-    Project     = "pbet"
+    Project     = "cloudfix"
     Backup      = "required"
   }
 }

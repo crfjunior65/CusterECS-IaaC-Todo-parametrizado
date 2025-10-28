@@ -9,7 +9,7 @@ Este documento detalha todas as variáveis disponíveis para configuração da i
 ### Cluster Configuration
 | Variável | Descrição | Tipo | Padrão | Obrigatória |
 |----------|-----------|------|--------|-------------|
-| `ecs_cluster_name` | Nome do cluster ECS | string | `"pbet-ecs"` | ✅ |
+| `ecs_cluster_name` | Nome do cluster ECS | string | `"cloudfix-ecs"` | ✅ |
 | `enable_container_insights` | Habilitar Container Insights | bool | `true` | ❌ |
 
 ### Application Configuration

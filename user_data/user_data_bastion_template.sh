@@ -30,7 +30,7 @@ yum install -y postgresql15
 
 # # Criar tunnel usando localhost (já estamos no bastion)
 # echo " Tunnel ativo: localhost:$LOCAL_PORT → $RDS_ENDPOINT:5432"
-# echo " Para conectar: psql -h localhost -p $LOCAL_PORT -U pbet -d pbet"
+# echo " Para conectar: psql -h localhost -p $LOCAL_PORT -U cloudfix -d cloudfix"
 # echo " Pressione Ctrl+C para encerrar"
 
 # # Manter tunnel ativo

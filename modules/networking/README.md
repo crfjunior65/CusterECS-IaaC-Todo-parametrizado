@@ -70,12 +70,12 @@ module "networking" {
 
   availability_zones = ["us-east-1a", "us-east-1b"]
 
-  prefix = "pbet"
+  prefix = "cloudfix"
   environment = "hml"
 
   tags = {
     Environment = "homolog"
-    Project     = "pbet"
+    Project     = "cloudfix"
   }
 }
 ```

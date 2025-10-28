@@ -3,7 +3,7 @@
 # Script para devs - Tunnel RDS sem gerenciar chave SSH
 
 RDS_DB_NAME="postgres"
-BASTION_NAME="pbet-hml-bastion-host"
+BASTION_NAME="cloudfix-hml-bastion-host"
 SSH_KEY="./aws-key-terraform.pem"
 
 # Obter IP do Bastion
@@ -19,7 +19,7 @@ RDS_ENDPOINT=$(aws rds describe-db-instances \
     --output text)
 
 echo "🚀 Tunnel: localhost:5435 → $RDS_ENDPOINT:5432"
-echo "💡 Conecte: psql -h localhost -p 5435 -U pbet -d pbet"
+echo "💡 Conecte: psql -h localhost -p 5435 -U cloudfix -d cloudfix"
 
 # Tunnel usando a chave do terraform
 ssh -N -L 5435:$RDS_ENDPOINT:5432 \

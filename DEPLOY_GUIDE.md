@@ -111,7 +111,7 @@ docker push $ECR_URL:latest
 ### 2. **Atualizar Terraform**
 ```hcl
 # terraform.tfvars
-app_image = "123456789012.dkr.ecr.us-east-1.amazonaws.com/pbet-hml-app:latest"
+app_image = "123456789012.dkr.ecr.us-east-1.amazonaws.com/cloudfix-hml-app:latest"
 health_check_path = "/health"  # Se sua app tem health check
 ```
 
@@ -164,16 +164,16 @@ aws rds describe-db-instances --db-instance-identifier $(terraform output -raw d
 
 # Conectar via túnel
 ./tunel_rds.sh
-psql -h localhost -p 5432 -U pbet -d pbet
+psql -h localhost -p 5432 -U cloudfix -d cloudfix
 ```
 
 ### Logs
 ```bash
 # Logs em tempo real
-aws logs tail /ecs/pbet-app-hml --follow
+aws logs tail /ecs/cloudfix-app-hml --follow
 
 # Logs com filtro
-aws logs filter-log-events --log-group-name /ecs/pbet-app-hml --filter-pattern "ERROR"
+aws logs filter-log-events --log-group-name /ecs/cloudfix-app-hml --filter-pattern "ERROR"
 ```
 
 ## 🚨 Troubleshooting Rápido

@@ -88,8 +88,8 @@ Este projeto implementa uma infraestrutura completa para a **CloudFix** utilizan
 
 ```hcl
 # ECS Configuration
-ecs_cluster_name = "pbet-cluster"
-app_name         = "pbet-app"        # Nome da aplicação
+ecs_cluster_name = "cluster"
+app_name         = "app"             # Nome da aplicação
 app_image        = "nginx:latest"    # Substitua pela sua imagem
 app_port         = 80
 task_cpu         = "256"             # 0.25 vCPU
@@ -104,8 +104,8 @@ enable_container_insights = true     # Container Insights habilitado
 assign_public_ip        = false      # IP público para tasks
 
 # Database Configuration
-db_name            = "pbet"
-db_username        = "pbet"
+db_name            = "cloudfix"
+db_username        = "cloudfix"
 db_password        = "sua_senha_segura"
 rds_instance_class = "db.t3.micro"
 rds_storage        = 50              # Storage inicial em GB
@@ -120,8 +120,8 @@ vpc_cidr = "10.0.0.0/16"
 num_azs  = 2
 
 # Project Configuration
-project_name = "plataforma-bet"
-prefix       = "pbet"
+project_name = "CloudFix
+prefix       = "cloudfix"
 environment  = "hml"
 ```
 
@@ -152,13 +152,13 @@ terraform apply
 # 1. Build e push da imagem Docker
 aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin <account-id>.dkr.ecr.us-east-1.amazonaws.com
 
-docker build -t pbet-app .
-docker tag pbet-app:latest <account-id>.dkr.ecr.us-east-1.amazonaws.com/pbet-app:latest
-docker push <account-id>.dkr.ecr.us-east-1.amazonaws.com/pbet-app:latest
+docker build -t cloudfix-app .
+docker tag cloudfix-app:latest <account-id>.dkr.ecr.us-east-1.amazonaws.com/cloudfix-app:latest
+docker push <account-id>.dkr.ecr.us-east-1.amazonaws.com/cloudfix-app:latest
 
 # 2. Atualize as variáveis no terraform.tfvars
-app_name = "pbet-app"
-app_image = "<account-id>.dkr.ecr.us-east-1.amazonaws.com/pbet-app:latest"
+app_name = "cloudfix-app"
+app_image = "<account-id>.dkr.ecr.us-east-1.amazonaws.com/cloudfix-app:latest"
 health_check_path = "/health"  # Se sua app tem endpoint de health check
 
 # 3. Aplique as mudanças
@@ -338,7 +338,7 @@ jobs:
 ### **ECS Core**
 | Variável | Descrição | Padrão | Tipo |
 |----------|-----------|--------|------|
-| `ecs_cluster_name` | Nome do cluster ECS | `"pbet-ecs"` | string |
+| `ecs_cluster_name` | Nome do cluster ECS | `"cloudfix-ecs"` | string |
 | `app_name` | Nome da aplicação | `"app"` | string |
 | `app_image` | Imagem Docker | `"nginx:latest"` | string |
 | `app_port` | Porta da aplicação | `80` | number |
@@ -424,8 +424,8 @@ infracost breakdown --path .
 
 ### 🆘 **Contatos**
 
-- **DevOps Team**: devops@plataformabet.com
-- **Slack**: #plataforma-bet-infra
+- **DevOps Team**: devops@cloudfix.com
+- **Slack**: #cloudfix-infra
 - **Documentação**: [Wiki Interno](wiki-url)
 
 ### 🐛 **Reportar Issues**

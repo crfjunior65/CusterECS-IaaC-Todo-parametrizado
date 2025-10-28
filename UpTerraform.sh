@@ -30,13 +30,13 @@ echo "🕒 Iniciando Terraform Apply em: ${TIMESTAMP}"
 #terraform apply -target=module.vpc -target=module.rds -target=module.eks -auto-approve
 
 # 3. Aguardar EKS estar pronto (5-10 minutos)
-#aws eks update-kubeconfig --region us-east-1 --name pbet-cluster
+#aws eks update-kubeconfig --region us-east-1 --name cloudfix-cluster
 
 # 4. Instalar Load Balancer Controller
 #terraform apply -target=helm_release.aws_load_balancer_controller -auto-approve
 
 # 5. Instalar CloudWatch Observability
-#aws eks create-addon --cluster-name pbet-cluster --addon-name amazon-cloudwatch-observability --region us-east-1
+#aws eks create-addon --cluster-name cloudfix-cluster --addon-name amazon-cloudwatch-observability --region us-east-1
 
 # 6. DEPLOYMENTS DE APLICAÇÃO (AQUI!)
 #kubectl apply -f k8s/  # Se tiver manifests K8s
@@ -47,16 +47,16 @@ echo "🕒 Iniciando Terraform Apply em: ${TIMESTAMP}"
 #sleep 250
 
 # 7. Aplicar dashboard
-#terraform apply -target=aws_cloudwatch_dashboard.pbet_dashboard_teste -auto-approve
+#terraform apply -target=aws_cloudwatch_dashboard.cloudfix_dashboard_teste -auto-approve
 
 # 8. Aplicar resto (se houver)
 terraform apply -auto-approve
 
 # Instalar CloudWatch Observability
-#aws eks create-addon --cluster-name pbet-cluster --addon-name amazon-cloudwatch-observability --region us-east-1
+#aws eks create-addon --cluster-name cloudfix-cluster --addon-name amazon-cloudwatch-observability --region us-east-1
 # DEPLOYMENTS DE APLICAÇÃO (AQUI!)
 # . Aguardar EKS estar pronto (5-10 minutos)
-#aws eks update-kubeconfig --region us-east-1 --name pbet-cluster
+#aws eks update-kubeconfig --region us-east-1 --name cloudfix-cluster
 
 # Instalar CloudWatch Agent
 #kubectl apply -f https://raw.githubusercontent.com/aws-samples/amazon-cloudwatch-container-insights/latest/k8s-deployment-manifest-templates/deployment-mode/daemonset/container-insights-monitoring/cloudwatch-namespace.yaml
@@ -90,18 +90,18 @@ sleep 5
 #echo "# Verificar cluster"
 #echo ""
 #echo "Conectando no Cluster EKS:"
-#echo "✅ aws eks update-kubeconfig --region us-east-1 --name pbet-cluster ✅"
+#echo "✅ aws eks update-kubeconfig --region us-east-1 --name cloudfix-cluster ✅"
 #echo ""
 #echo "kubectl get nodes"
 #echo ""
 #echo "# Verificar addons"
-#echo "aws eks describe-addon --cluster-name pbet-cluster --addon-name amazon-cloudwatch-observability --region us-east-1"
+#echo "aws eks describe-addon --cluster-name cloudfix-cluster --addon-name amazon-cloudwatch-observability --region us-east-1"
 #echo ""
 #echo "# Verificar métricas (após 5 minutos)"
-#echo "aws cloudwatch list-metrics --namespace ContainerInsights --region us-east-1 | grep pbet-cluster"
+#echo "aws cloudwatch list-metrics --namespace ContainerInsights --region us-east-1 | grep cloudfix-cluster"
 #echo ""
 #echo "# Verificar dashboard"
-#echo "aws cloudwatch get-dashboard --dashboard-name pbet-dashboard-funcional-completo --region us-east-1"
+#echo "aws cloudwatch get-dashboard --dashboard-name cloudfix-dashboard-funcional-completo --region us-east-1"
 #echo ""
 #echo "### **5. ORDEM CRÍTICA DE DEPENDÊNCIAS**"
 #echo "1. VPC → RDS → EKS (base)"
@@ -114,7 +114,7 @@ sleep 5
 # Solicitar permissao para startar os Manifestos de Configuração
 #read -p "Deseja aplicar os manifestos de configuração do Kubernetes agora? (s/n): " apply_manifests
 #if [[ "$apply_manifests" == "s" || "$apply_manifests" == "S" ]]; then
-#    #aws eks update-kubeconfig --region us-east-1 --name pbet-cluster
+#    #aws eks update-kubeconfig --region us-east-1 --name cloudfix-cluster
 #    aws eks update-kubeconfig --region us-east-1 --name $(terraform output -raw k8s_name)
 #    # Aplicar os manifestos de configuração do Kubernetes
 #    echo "Aplicando manifestos de configuração do Kubernetes..."

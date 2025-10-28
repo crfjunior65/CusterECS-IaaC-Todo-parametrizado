@@ -6,7 +6,7 @@ on:
 
 env:
   AWS_REGION: us-east-1
-  EKS_CLUSTER_NAME: pbet-cluster
+  EKS_CLUSTER_NAME: cloudfix-cluster
 
 jobs:
   validate-alb:

@@ -2,7 +2,7 @@
 
 ## Visão Geral do Projeto
 
-Este projeto implementa uma infraestrutura completa na AWS para uma plataforma de apostas (PBet) usando Terraform, incluindo EKS, RDS, Valkey (cache), monitoramento e alta disponibilidade.
+Este projeto implementa uma infraestrutura completa na AWS para uma plataforma de apostas (cloudfix) usando Terraform, incluindo EKS, RDS, Valkey (cache), monitoramento e alta disponibilidade.
 
 ## Arquitetura Implementada
 
@@ -101,7 +101,7 @@ sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
 # Helm
 curl https://baltocdn.com/helm/signing.asc | gpg --dearmor | sudo tee /usr/share/keyrings/helm.gpg > /dev/null
-echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/helm.gpg] https://baltocdn.com/helm/stable/depbetn/ all main" | sudo tee /etc/apt/sources.list.d/helm-stable-depbetn.list
+echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/helm.gpg] https://baltocdn.com/helm/stable/decloudfixn/ all main" | sudo tee /etc/apt/sources.list.d/helm-stable-decloudfixn.list
 sudo apt-get update && sudo apt-get install helm
 ```
 
@@ -135,9 +135,9 @@ chmod 400 aws-key-terraform.pem
 # Editar arquivo de variáveis
 cat > terraform.tfvars << EOF
 # Configurações obrigatórias
-prefix = "pbet"
-project_name = "pbet"
-eks_cluster_name = "pbet-hml-cluster"
+prefix = "cloudfix"
+project_name = "cloudfix"
+eks_cluster_name = "cloudfix-hml-cluster"
 eks_version = "1.33"
 node_group_instance_types = ["t3.medium"]
 rds_instance_class = "db.t3.micro"
@@ -155,9 +155,9 @@ valkey_num_nodes = 2
 valkey_engine_version = "7.2"
 
 # RDS
-db_name = "pbet"
-db_username = "pbet"
-db_password = "pbet_password_secure_123"
+db_name = "cloudfix"
+db_username = "cloudfix"
+db_password = "cloudfix_password_secure_123"
 rds_storage = 50
 
 # Monitoramento
@@ -205,7 +205,7 @@ terraform apply -auto-approve
 #### Configurar kubectl
 ```bash
 # Configurar acesso ao EKS
-aws eks update-kubeconfig --region us-east-1 --name pbet-hml-cluster
+aws eks update-kubeconfig --region us-east-1 --name cloudfix-hml-cluster
 
 # Verificar conectividade
 kubectl get nodes
@@ -281,7 +281,7 @@ echo "✅ Infraestrutura removida!"
 ./tunel_rds.sh
 
 # Conectar ao PostgreSQL
-psql -h localhost -p 5432 -U pbet -d pbet
+psql -h localhost -p 5432 -U cloudfix -d cloudfix
 ```
 
 #### Valkey
@@ -296,7 +296,7 @@ redis-cli -h localhost -p 6379
 #### Monitoramento
 ```bash
 # Acessar CloudWatch Dashboard
-aws cloudwatch get-dashboard --dashboard-name pbet-hml-dashboard-funcional-completo
+aws cloudwatch get-dashboard --dashboard-name cloudfix-hml-dashboard-funcional-completo
 ```
 
 ## Outputs Importantes
@@ -328,7 +328,7 @@ terraform output valkey_port
 aws logs describe-log-groups --log-group-name-prefix /aws/eks
 
 # Ver logs de aplicações
-kubectl logs -f deployment/pbet-app
+kubectl logs -f deployment/cloudfix-app
 ```
 
 ## Troubleshooting
@@ -344,7 +344,7 @@ aws elasticache describe-cache-parameter-groups --region us-east-1
 #### 2. Conectividade EKS
 ```bash
 # Reconfigurar kubectl
-aws eks update-kubeconfig --region us-east-1 --name pbet-hml-cluster --force
+aws eks update-kubeconfig --region us-east-1 --name cloudfix-hml-cluster --force
 
 # Verificar IAM
 aws sts get-caller-identity

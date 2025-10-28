@@ -14,8 +14,8 @@ on:
 
 env:
   AWS_REGION: us-east-1
-  ECR_REPOSITORY: /backoffice/pbet-bko-api-back-teste
-  EKS_CLUSTER_NAME: pbet-cluster
+  ECR_REPOSITORY: /backoffice/cloudfix-bko-api-back-teste
+  EKS_CLUSTER_NAME: cloudfix-cluster
 
 jobs:
   build-and-push:
@@ -183,23 +183,23 @@ jobs:
       - name: Diagnose deployment before rollout
         run: |
           echo "=== Checking deployment status ==="
-          kubectl get deployment #  pbet-bko-deployment-stg -n backoffice -o wide
+          kubectl get deployment #  cloudfix-bko-deployment-stg -n backoffice -o wide
 
           echo "=== Checking pods status ==="
-          kubectl get pods -n backoffice #  -l app=pbet-bko-api -o wide
+          kubectl get pods -n backoffice #  -l app=cloudfix-bko-api -o wide
 
           echo "=== Checking events ==="
           kubectl get events -n backoffice --sort-by=.metadata.creationTimestamp
 
           echo "=== Checking pod logs (if any) ==="
-          kubectl logs -l app=pbet-bko-api -n backoffice --tail=20 --ignore-errors=true
+          kubectl logs -l app=cloudfix-bko-api -n backoffice --tail=20 --ignore-errors=true
 
       #  - name: Wait for deployment rollout
       #  run: |
-      #    kubectl rollout status deployment/pbet-bko-deployment-stg -n backoffice --timeout=600s
+      #    kubectl rollout status deployment/cloudfix-bko-deployment-stg -n backoffice --timeout=600s
 
       - name: Get deployment status
         run: |
           kubectl get deployments -n backoffice
-          kubectl get pods -n backoffice #  -l app=pbet-bko-api
-          #  kubectl describe deployment pbet-bko-deployment-stg -n backoffice
+          kubectl get pods -n backoffice #  -l app=cloudfix-bko-api
+          #  kubectl describe deployment cloudfix-bko-deployment-stg -n backoffice
