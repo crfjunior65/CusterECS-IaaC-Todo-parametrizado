@@ -28,4 +28,4 @@ jobs:
       - name: Deploy
         run: |
           terraform init
-          terraform apply -auto-approve
+          terraform apply -var="aws_profile=" -auto-approve
