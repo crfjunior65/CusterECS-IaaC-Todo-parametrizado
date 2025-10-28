@@ -1,5 +1,6 @@
 # Configurações AWS
-region = "us-east-1"
+aws_profile = "CloudFix" # Usado apenas localmente
+region      = "us-east-1"
 
 # ECS Configuration
 ecs_cluster_name = "cluster"

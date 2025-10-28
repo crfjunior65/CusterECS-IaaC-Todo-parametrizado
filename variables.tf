@@ -1,3 +1,10 @@
+# AWS Configuration
+variable "aws_profile" {
+  description = "AWS profile to use (leave empty for GitHub Actions)"
+  type        = string
+  default     = ""
+}
+
 variable "region" {
   description = "Region AWS where the Network resources will be deployed, e.g., us-east-1, for the USA North Virginia region"
   type        = string
